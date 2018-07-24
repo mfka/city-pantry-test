@@ -1,0 +1,40 @@
+App\Command\SearchCommand:
+    properties:
+        filePath:
+            - NotBlank: ~
+            - File:
+                mimeTypes: [text/plain]
+                notFoundMessage: Couldn't find file
+                notReadableMessage: Couldn't read file
+                mimeTypesMessage: Not propert file. Expecte text/plain mimeType file
+            - Regex:
+                pattern: '/.*\.txt$/'
+                message: Not propert file. Expecte .txt file
+        day:
+            - NotBlank: ~
+            - DateTime:
+                format: d/m/y
+#            - App\Validator\Constraints\ConstrainsGreaterThanDate:
+#                format: d/m/y
+#                message: 'Served day: {{ value }} - this day has already been. Must be greater than {{ actual_time }}'
+
+        time:
+            - NotBlank: ~
+            - DateTime:
+                format: H:i
+                message: Time provided is incorrect. Should be in 24h format eg. 00:11
+            - Regex:
+                pattern: '/^\d{2}:\d{2}$/'
+                message: Incorrect time format {{ value }}. Should be like mm:yy
+#            - App\Validator\Constraints\ConstrainsGreaterThanDate:
+#                format: H:i
+        location:
+            - NotBlank: ~
+            - Regex:
+                pattern: '/^[A-Za-z][a-zA-Z0-9]{1,}$/'
+                message: Provided location {{ value }} is incorrect.
+        cover:
+            - NotBlank: ~
+            - Range:
+                min: 1
+                minMessage: 'Must be positive number'
