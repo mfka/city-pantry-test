@@ -47,11 +47,10 @@ class RestaurantsFileProcessor
                         $restaurantEvent = new ValidateRestaurantEvent($restaurant, $arguments);
                         $this->dispatcher->dispatch(ValidateRestaurantEvent::NAME, $restaurantEvent);
 
+                        $skipMeals = true;
                         if ($restaurant->isValid()) {
                             $this->restaurant = $restaurant;
                             $skipMeals = false;
-                        } else {
-                            $skipMeals = true;
                         }
 
                         $lineIsRestaurant = false;
