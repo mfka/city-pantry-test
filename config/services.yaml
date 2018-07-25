@@ -22,3 +22,6 @@ services:
     App\Subscriber\VendorSubscriber:
         tags:
           - { name: kernel.event_subscriber }
+
+    Symfony\Component\Console\Output\ConsoleOutput: ~
+    Symfony\Component\Console\Output\ConsoleOutputInterface: '@Symfony\Component\Console\Output\ConsoleOutput'

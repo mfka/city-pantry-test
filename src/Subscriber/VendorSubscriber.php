@@ -7,6 +7,7 @@ use App\Model\RestaurantModel;
 use App\Service\MealCreator;
 use App\Service\RestaurantCreator;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class VendorSubscriber implements EventSubscriberInterface
@@ -17,12 +18,18 @@ class VendorSubscriber implements EventSubscriberInterface
     private $restaurant;
     /** @var MealCreator */
     private $mealCreator;
+    /** @var ConsoleOutputInterface */
+    private $output;
 
-    public function __construct(RestaurantCreator $restaurantCreator, MealCreator $mealCreator)
-    {
+    public function __construct(
+        RestaurantCreator $restaurantCreator,
+        MealCreator $mealCreator,
+        ConsoleOutputInterface $output
+    ) {
         $this->restaurantCreator = $restaurantCreator;
         $this->restaurant = [];
         $this->mealCreator = $mealCreator;
+        $this->output = $output;
     }
 
     public static function getSubscribedEvents(): array
@@ -32,7 +39,6 @@ class VendorSubscriber implements EventSubscriberInterface
 
     public function onVendorFound(VendorFoundEvent $event): void
     {
-        $output = new ConsoleOutput();
         $vendor = $event->getVendor();
         foreach ($vendor as $iteration => $value) {
             if ($iteration === key($vendor)) {
@@ -44,7 +50,7 @@ class VendorSubscriber implements EventSubscriberInterface
             }
             $meal = $this->mealCreator->create($value, $event->getArguments());
             if ($meal->isValid()) {
-                $output->writeln(
+                $this->output->writeln(
                     sprintf(
                         '%s;%s',
                         $meal->getName(),
