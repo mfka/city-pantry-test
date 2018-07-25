@@ -7,15 +7,16 @@ use App\Model\RestaurantModel;
 
 class RestaurantValidator
 {
-    public function validate(RestaurantModel $restaurant, ArgumentsModel $arguments): bool
+    public function validate(RestaurantModel $restaurant, ArgumentsModel $arguments): void
     {
         switch (true) {
             case ($restaurant->getCoverage() < $arguments->getCover()):
-                return false;
+                break;
             case (!$this->comparePostal($restaurant->getPostal(), $arguments->getLocation())):
-                return false;
+                break;
             default:
-                return true;
+                $restaurant->setValid(true);
+                break;
         }
     }
 

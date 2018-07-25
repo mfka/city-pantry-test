@@ -19,10 +19,6 @@ services:
         tags:
           - { name: tactician.handler, typehints: true}
 
-    App\Subscriber\FindFoodProviderSubscriber:
-        tags:
-          - { name: kernel.event_subscriber }
-
-    App\Subscriber\RestaurantSubscriber:
+    App\Subscriber\VendorSubscriber:
         tags:
           - { name: kernel.event_subscriber }

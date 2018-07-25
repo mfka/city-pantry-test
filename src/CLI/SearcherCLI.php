@@ -9,7 +9,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class SearcherCLI extends Command
 {
@@ -27,16 +26,11 @@ class SearcherCLI extends Command
     ];
     /** @var CommandBus */
     private $commandBus;
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
 
-    public function __construct(?string $name = null, CommandBus $commandBus, EventDispatcherInterface $dispatcher)
+    public function __construct(?string $name = null, CommandBus $commandBus)
     {
         parent::__construct($name);
         $this->commandBus = $commandBus;
-        $this->dispatcher = $dispatcher;
     }
 
     protected function configure(): void

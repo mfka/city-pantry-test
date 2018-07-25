@@ -3,12 +3,8 @@
 namespace App\Handler;
 
 use App\Command\SearchCommand;
-use App\Event\FindFoodProviderEvent;
 use App\Model\ArgumentsModel;
-use App\Model\MealModel;
-use App\Model\RestaurantModel;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use App\Service\VendorsFileProcessor;
 use Symfony\Component\Validator\Exception\ValidatorException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -16,14 +12,12 @@ class SearchHandler
 {
     /** @var ValidatorInterface */
     private $validator;
+    /** @var VendorsFileProcessor */
+    private $processor;
 
-    /** @var EventDispatcherInterface */
-    private $dispatcher;
-
-    public function __construct(ValidatorInterface $validator, EventDispatcherInterface $dispatcher)
-    {
+    public function __construct(ValidatorInterface $validator, VendorsFileProcessor $processor) {
         $this->validator = $validator;
-        $this->dispatcher = $dispatcher;
+        $this->processor = $processor;
     }
 
     public function handle(SearchCommand $command): void
@@ -37,17 +31,8 @@ class SearchHandler
                 $command->getCover()
             );
 
-            $event = new FindFoodProviderEvent($command->getFilePath(), $arguments);
-            $this->dispatcher->dispatch(FindFoodProviderEvent::NAME, $event);
+            $this->processor->process($command->getFilePath(), $arguments);
 
-            $output = new ConsoleOutput();
-            /** @var RestaurantModel $restaurant */
-            foreach ($event->getResults() as $restaurant) {
-                /** @var MealModel $meal */
-                foreach ($restaurant->getMeals() as $meal) {
-                    $output->writeln(sprintf('%s;%s', $meal->getName(), $meal->getAllergensAsString()));
-                }
-            }
         }
     }
 
