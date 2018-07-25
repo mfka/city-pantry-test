@@ -4,8 +4,8 @@ namespace App\Service;
 
 use App\Event\VendorFoundEvent;
 use App\Model\ArgumentsModel;
+use App\Validator\VendorRowValidator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Validator\Exception\ValidatorException;
 
 class VendorsFileProcessor
 {
@@ -13,10 +13,13 @@ class VendorsFileProcessor
     private $dispatcher;
     /** @var ArgumentsModel */
     private $arguments;
+    /** @var VendorRowValidator */
+    private $validator;
 
-    public function __construct(EventDispatcherInterface $dispatcher)
+    public function __construct(EventDispatcherInterface $dispatcher, VendorRowValidator $validator)
     {
         $this->dispatcher = $dispatcher;
+        $this->validator = $validator;
     }
 
     public function process(string $filePath, ArgumentsModel $arguments): void
@@ -46,9 +49,7 @@ class VendorsFileProcessor
     {
         $row = explode(';', $line);
 
-        if (\count($row) !== 3) {
-            throw new ValidatorException('Incorrect line in file.'.$line);
-        }
+        $this->validator->validate($row);
 
         return $row;
     }

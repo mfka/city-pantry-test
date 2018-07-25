@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Model\ArgumentsModel;
 use App\Model\RestaurantModel;
 use App\Validator\RestaurantValidator;
+use Symfony\Component\Validator\Exception\ValidatorException;
 
 class RestaurantCreator
 {
@@ -18,8 +19,14 @@ class RestaurantCreator
 
     public function create(array $data, ArgumentsModel $arguments): RestaurantModel
     {
-        $restaurant = new RestaurantModel(trim($data[0]), trim($data[1]), (int)$data[2]);
-        $this->validator->validate($restaurant, $arguments);
-        return $restaurant;
+        try {
+            $restaurant = new RestaurantModel(trim($data[0]), trim($data[1]), (int)$data[2]);
+            $this->validator->validate($restaurant, $arguments);
+
+            return $restaurant;
+        } catch (\Exception $exception) {
+            throw new ValidatorException('Could not create Restaurant. Invalid vendor line: '.implode(';', $data));
+        }
+
     }
 }
