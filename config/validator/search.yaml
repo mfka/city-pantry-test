@@ -14,10 +14,6 @@ App\Command\SearchCommand:
             - NotBlank: ~
             - DateTime:
                 format: d/m/y
-#            - App\Validator\Constraints\ConstrainsGreaterThanDate:
-#                format: d/m/y
-#                message: 'Served day: {{ value }} - this day has already been. Must be greater than {{ actual_time }}'
-
         time:
             - NotBlank: ~
             - DateTime:
@@ -26,8 +22,6 @@ App\Command\SearchCommand:
             - Regex:
                 pattern: '/^\d{2}:\d{2}$/'
                 message: Incorrect time format {{ value }}. Should be like mm:yy
-#            - App\Validator\Constraints\ConstrainsGreaterThanDate:
-#                format: H:i
         location:
             - NotBlank: ~
             - Regex:
@@ -38,3 +32,7 @@ App\Command\SearchCommand:
             - Range:
                 min: 1
                 minMessage: 'Must be positive number'
+    getters:
+        dateGreaterThanToday:
+            - 'IsTrue':
+                message: 'Incorrect time and/or day value. You can not search for current or previous days'

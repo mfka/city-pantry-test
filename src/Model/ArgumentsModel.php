@@ -7,21 +7,11 @@ namespace App\Model;
  */
 class ArgumentsModel
 {
-    /**
-     * @var \DateTime
-     */
+    /** @var \DateTime */
     private $date;
-    /**
-     * @var \DateTime
-     */
-    private $time;
-    /**
-     * @var string
-     */
+    /** @var string */
     private $location;
-    /**
-     * @var int
-     */
+    /** @var int */
     private $cover;
 
     public function __construct(string $day, string $time, string $location, int $cover)
@@ -60,4 +50,5 @@ class ArgumentsModel
     {
         $this->cover = $cover;
     }
+
 }

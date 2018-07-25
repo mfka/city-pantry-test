@@ -48,4 +48,13 @@ class SearchCommand
     {
         return $this->cover;
     }
+
+    public function isDateGreaterThanToday(): bool
+    {
+        $date = \DateTime::createFromFormat('d/m/y H:i', $this->day.' '.$this->time);
+
+        $now = new \DateTime('now');
+
+        return $date > $now;
+    }
 }
